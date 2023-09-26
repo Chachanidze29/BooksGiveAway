@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  api:
+    container_name: django_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+
+  database:
+    container_name: django_admin_db
+    image: keinos/sqlite3:latest
+    restart: always
+    environment:
+      SQLITE_DATABASE: django_admin
+      SQLITE_USER: root
+      SQLITE_PASSWORD: root
+      SQLITE_ROOT_PASSWORD: root
+    volumes:
+      - .dbdata:/var/lib/sqlite3
