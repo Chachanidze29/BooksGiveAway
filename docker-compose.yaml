@@ -23,3 +23,5 @@ services:
       SQLITE_ROOT_PASSWORD: root
     volumes:
       - .dbdata:/var/lib/sqlite3
+    ports:
+      - 33066:3306
