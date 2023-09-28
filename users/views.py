@@ -42,6 +42,23 @@ def login(request):
     return response
 
 
+@api_view(["POST"])
+def logout(request):
+    response = Response()
+    response.delete_cookie(key='jwt')
+    response.data = {
+        'message': 'Success'
+    }
+
+    return response
+
+
+@api_view(["GET"])
+def users(request):
+    serializer = UserSerializer(User.objects.all(), many=True)
+    return Response(serializer.data)
+
+
 class AuthenticatedUser(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -52,9 +69,3 @@ class AuthenticatedUser(APIView):
         return Response({
             'data': serializer.data
         })
-
-
-@api_view(["GET"])
-def users(request):
-    serializer = UserSerializer(User.objects.all(), many=True)
-    return Response(serializer.data)
