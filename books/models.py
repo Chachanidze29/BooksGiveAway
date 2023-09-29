@@ -1,6 +1,5 @@
 from django.db import models
-
-from users.models import User
+from django.conf import settings
 
 
 class Book(models.Model):
@@ -10,4 +9,7 @@ class Book(models.Model):
     condition = models.CharField(max_length=200, default='Good')
     image = models.CharField(max_length=200, default='')
     location = models.CharField(max_length=200)
-    owner_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='owner', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='recipient', blank=True, null=True, on_delete=models.CASCADE)
