@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from users.serializers import UserSerializer
 from rest_framework import status
+from rest_framework import generics
+from users.models import User
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -47,3 +49,26 @@ class Wishlist(APIView):
         user.wishlist.add(book)
 
         return Response({'data': 'Book added to the wishlist.'}, status=status.HTTP_201_CREATED)
+
+
+class UsersWithBookInWishlistView(generics.ListCreateAPIView):
+    serializer_class = UserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        book_id = self.kwargs['book_id']
+        return User.objects.filter(wishlist__id=book_id)
+
+    def post(self, request, book_id):
+        book = Book.objects.get(id=book_id)
+        recipient = User.objects.get(
+            id=request.data.get('recipient_id'))
+
+        if (not recipient.wishlist.filter(id=book_id).exists()):
+            return Response({'data': "User doesn't have a book in wishlist"}, status=status.HTTP_404_NOT_FOUND)
+
+        book.recipient = recipient
+        book.save()
+
+        return Response({'data': "Success"}, status=status.HTTP_200_OK)
