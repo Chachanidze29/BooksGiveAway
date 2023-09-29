@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'users.apps.UsersConfig',
-    'books.apps.BooksConfig'
+    'books.apps.BooksConfig',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Books Giveaway API',
+    'DESCRIPTION': "A Books Giveaway API enables users to discover new reads and pass along.",
+    'SERVE_INCLUDE_SCHEMA': False,
+}

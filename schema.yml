@@ -1,0 +1,361 @@
+openapi: 3.0.3
+info:
+  title: Books Giveaway API
+  version: 0.0.0
+  description: A Books Giveaway API enables users to discover new reads and pass along.
+paths:
+  /api/books/:
+    get:
+      operationId: books_list
+      parameters:
+      - in: query
+        name: author
+        schema:
+          type: string
+      - in: query
+        name: condition
+        schema:
+          type: string
+      - in: query
+        name: genre
+        schema:
+          type: string
+      tags:
+      - books
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+          description: ''
+    post:
+      operationId: books_create
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Book'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+  /api/books/{book_id}/users/:
+    get:
+      operationId: books_users_list
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - books
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+    post:
+      operationId: books_users_create
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/books/{id}/:
+    get:
+      operationId: books_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+    put:
+      operationId: books_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Book'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+    patch:
+      operationId: books_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+    delete:
+      operationId: books_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this book.
+        required: true
+      tags:
+      - books
+      responses:
+        '204':
+          description: No response body
+  /api/books/wishlist:
+    get:
+      operationId: books_wishlist_retrieve
+      tags:
+      - books
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: books_wishlist_create
+      tags:
+      - books
+      responses:
+        '200':
+          description: No response body
+  /api/login:
+    post:
+      operationId: login_create
+      tags:
+      - login
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/logout:
+    post:
+      operationId: logout_create
+      tags:
+      - logout
+      responses:
+        '200':
+          description: No response body
+  /api/register:
+    post:
+      operationId: register_create
+      tags:
+      - register
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/user:
+    get:
+      operationId: user_retrieve
+      tags:
+      - user
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        author:
+          type: string
+          maxLength: 200
+        genre:
+          type: string
+          maxLength: 200
+        location:
+          type: string
+          maxLength: 200
+        condition:
+          type: string
+          maxLength: 200
+        image:
+          type: string
+          maxLength: 200
+        owner:
+          type: integer
+        recipient:
+          type: integer
+          nullable: true
+      required:
+      - author
+      - genre
+      - id
+      - location
+      - name
+      - owner
+    PatchedBook:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 200
+        author:
+          type: string
+          maxLength: 200
+        genre:
+          type: string
+          maxLength: 200
+        location:
+          type: string
+          maxLength: 200
+        condition:
+          type: string
+          maxLength: 200
+        image:
+          type: string
+          maxLength: 200
+        owner:
+          type: integer
+        recipient:
+          type: integer
+          nullable: true
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        first_name:
+          type: string
+          maxLength: 200
+        last_name:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          maxLength: 200
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 200
+        date_joined:
+          type: string
+          format: date-time
+        wishlist:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - id
+      - last_name
+      - password
+      - wishlist
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
