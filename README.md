@@ -12,8 +12,9 @@ Before you can run the Books Giveaway API, ensure you have the following prerequ
 
 ### Installation & Setup
 
- - git clone https://github.com/Chachanidze29/BooksGiveAway.git
+ - git clone https://github.com/Chachanidze29/BooksGiveAway.git BooksGiveAway
  - cd BooksGiveAway
+ - create .env file and add SECRET_KEY. to generate secret key you can use django.core.management.utils.get_random_secret_key()
  - run docker compose up --build
  - run docker-compose exec api sh and inside shell run python3 manage.py makemigrations & python3 manage.py migrate
  - open browser and open localhost:8000 (http://0.0.0.0:8000/ instead of 0.0.0.0 use localhost)
