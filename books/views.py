@@ -51,7 +51,7 @@ class Wishlist(APIView):
         return Response({'data': 'Book added to the wishlist.'}, status=status.HTTP_201_CREATED)
 
 
-class UsersWithBookInWishlistView(generics.ListCreateAPIView):
+class UsersWithBookInWishlist(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
