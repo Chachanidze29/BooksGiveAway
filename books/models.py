@@ -12,4 +12,4 @@ class Book(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='owner', on_delete=models.CASCADE)
     recipient = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name='recipient', blank=True, null=True)
+        settings.AUTH_USER_MODEL, related_name='recipient', blank=True, null=True, on_delete=models.DO_NOTHING)

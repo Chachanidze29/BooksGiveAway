@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from .models import User
 from rest_framework import exceptions
@@ -17,7 +17,9 @@ def register(request):
     serializer = UserSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    return Response(serializer.data)
+    return Response({
+        'data': serializer.data
+    })
 
 
 @api_view(["POST"])
@@ -43,6 +45,8 @@ def login(request):
 
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([JWTAuthentication])
 def logout(request):
     response = Response()
     response.delete_cookie(key='jwt')
@@ -51,12 +55,6 @@ def logout(request):
     }
 
     return response
-
-
-@api_view(["GET"])
-def users(request):
-    serializer = UserSerializer(User.objects.all(), many=True)
-    return Response(serializer.data)
 
 
 class AuthenticatedUser(APIView):

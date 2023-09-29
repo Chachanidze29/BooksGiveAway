@@ -1,10 +1,9 @@
 from django.urls import path
 
-from .views import users, register, login, logout
+from .views import register, login, logout
 from .views import AuthenticatedUser
 
 urlpatterns = [
-    path('users', users),
     path('register', register),
     path('login', login),
     path('logout', logout),
