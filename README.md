@@ -9,6 +9,7 @@ Before you can run the Books Giveaway API, ensure you have the following prerequ
 - Python 3.x
 - pip3 (for managing Python packages)
 - Git (for cloning the repository)
+- Docker Desktop
 
 ### Installation & Setup
 
