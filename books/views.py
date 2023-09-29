@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from .models import Book
 from .serializers import BookSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from users.authentication import JWTAuthentication
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
@@ -20,6 +20,12 @@ class BookViewSet(viewsets.ModelViewSet):
 
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['condition', 'author', 'genre']
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [AllowAny()]
+        else:
+            return [IsAuthenticated()]
 
 
 class Wishlist(APIView):
