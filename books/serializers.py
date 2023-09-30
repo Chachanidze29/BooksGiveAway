@@ -7,3 +7,7 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = ['id', 'name', 'author',
                   'genre', 'location', 'condition', 'image', 'owner', 'recipient']
+
+
+class BookIdSerializer(serializers.Serializer):
+    book = serializers.IntegerField()

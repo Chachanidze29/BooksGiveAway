@@ -211,6 +211,18 @@ paths:
       operationId: books_wishlist_create
       tags:
       - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookId'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BookId'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BookId'
+        required: true
       responses:
         '200':
           description: No response body
@@ -328,6 +340,13 @@ components:
       - location
       - name
       - owner
+    BookId:
+      type: object
+      properties:
+        book:
+          type: integer
+      required:
+      - book
     PatchedBook:
       type: object
       properties:

@@ -10,6 +10,8 @@ from users.serializers import UserSerializer
 from rest_framework import status
 from rest_framework import generics
 from users.models import User
+from drf_spectacular.utils import extend_schema
+from .serializers import BookIdSerializer
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -31,6 +33,9 @@ class Wishlist(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        request=BookSerializer(many=True),
+    )
     def get(self, request):
         user = UserSerializer(request.user)
 
@@ -38,6 +43,9 @@ class Wishlist(APIView):
             'data': user.data['wishlist']
         })
 
+    @extend_schema(
+        request=BookIdSerializer
+    )
     def post(self, request):
         book_id = request.data.get('book')
 
