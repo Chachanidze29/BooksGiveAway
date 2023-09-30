@@ -1,4 +1,3 @@
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from .models import User
 from rest_framework import exceptions
@@ -9,57 +8,63 @@ from rest_framework.permissions import IsAuthenticated
 from .authentication import JWTAuthentication
 
 
-@api_view(["POST"])
-def register(request):
-    data = request.data
-    if (data['password'] != data['password_confirm']):
-        raise exceptions.APIException("Passwords don't match")
-    serializer = UserSerializer(data=data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response({
-        'data': serializer.data
-    })
+class Register(APIView):
+    serializer_class = UserSerializer
+
+    def post(self, request):
+        data = request.data
+        if (data['password'] != data['password_confirm']):
+            raise exceptions.APIException("Passwords don't match")
+        serializer = UserSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({
+            'data': serializer.data
+        })
 
 
-@api_view(["POST"])
-def login(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
-    user = User.objects.get(email=email)
+class Login(APIView):
+    serializer_class = UserSerializer
 
-    if (user is None):
-        raise exceptions.AuthenticationFailed('Wrong Email Address')
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = User.objects.get(email=email)
 
-    if (not user.check_password(password)):
-        raise exceptions.AuthenticationFailed('Wrong Password')
+        if (user is None):
+            raise exceptions.AuthenticationFailed('Wrong Email Address')
 
-    response = Response()
-    token = generate_access_token(user)
-    response.set_cookie(key='jwt', value=token, httponly=True)
-    response.data = {
-        'jwt': token
-    }
+        if (not user.check_password(password)):
+            raise exceptions.AuthenticationFailed('Wrong Password')
 
-    return response
+        response = Response()
+        token = generate_access_token(user)
+        response.set_cookie(key='jwt', value=token, httponly=True)
+        response.data = {
+            'jwt': token
+        }
+
+        return response
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@authentication_classes([JWTAuthentication])
-def logout(request):
-    response = Response()
-    response.delete_cookie(key='jwt')
-    response.data = {
-        'message': 'Success'
-    }
+class Logout(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    return response
+    def post(self, request):
+        response = Response()
+        response.delete_cookie(key='jwt')
+        response.data = {
+            'message': 'Success'
+        }
+
+        return response
 
 
 class AuthenticatedUser(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
 
     def get(self, request):
         serializer = UserSerializer(request.user)

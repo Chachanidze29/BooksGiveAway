@@ -22,6 +22,8 @@ paths:
           type: string
       tags:
       - books
+      security:
+      - {}
       responses:
         '200':
           content:
@@ -115,6 +117,8 @@ paths:
         required: true
       tags:
       - books
+      security:
+      - {}
       responses:
         '200':
           content:
@@ -215,13 +219,29 @@ paths:
       operationId: login_create
       tags:
       - login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
   /api/logout:
     post:
       operationId: logout_create
@@ -235,13 +255,29 @@ paths:
       operationId: register_create
       tags:
       - register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
       security:
       - cookieAuth: []
       - basicAuth: []
       - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
   /api/user:
     get:
       operationId: user_retrieve
@@ -249,7 +285,11 @@ paths:
       - user
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
 components:
   schemas:
     Book:
