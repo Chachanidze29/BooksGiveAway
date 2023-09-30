@@ -16,7 +16,6 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
 
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['condition', 'author', 'genre']
@@ -72,7 +71,7 @@ class UsersWithBookInWishlist(generics.ListCreateAPIView):
             id=request.data.get('recipient_id'))
 
         if (not recipient.wishlist.filter(id=book_id).exists()):
-            return Response({'data': "User doesn't have a book in wishlist"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'data': "User doesn't have that book in wishlist"}, status=status.HTTP_404_NOT_FOUND)
 
         book.recipient = recipient
         book.save()

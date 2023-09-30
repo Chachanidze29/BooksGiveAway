@@ -26,10 +26,10 @@ def register(request):
 def login(request):
     email = request.data.get('email')
     password = request.data.get('password')
-    user = User.objects.filter(email=email).first()
+    user = User.objects.get(email=email)
 
     if (user is None):
-        raise exceptions.AuthenticationFailed('Wrong Password')
+        raise exceptions.AuthenticationFailed('Wrong Email Address')
 
     if (not user.check_password(password)):
         raise exceptions.AuthenticationFailed('Wrong Password')
