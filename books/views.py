@@ -22,6 +22,15 @@ class BookViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['condition', 'author', 'genre']
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    def perform_destroy(self, instance):
+        if self.request.user == instance.owner:
+            instance.delete()
+        else:
+            return Response({"detail": "You do not have permission to delete this book."}, status=status.HTTP_403_FORBIDDEN)
+
     def get_permissions(self):
         if self.action in ['list', 'retrieve']:
             return [AllowAny()]
